@@ -1,11 +1,10 @@
 import * as PIXI from "pixi.js";
-import { PixiConsole, PixiConsoleConfig } from "pixi-console";
-
-import rabbitImage from "./assets/rabbit.png";
+import { AlienSwarm } from "./AlienSwarm";
+import rabbitImage from "./assets/aliens.png";
 
 export class Main {
-    private static readonly GAME_WIDTH = 800;
-    private static readonly GAME_HEIGHT = 600;
+    private static readonly GAME_WIDTH = 320;
+    private static readonly GAME_HEIGHT = 200;
 
     private app: PIXI.Application | undefined;
 
@@ -26,26 +25,24 @@ export class Main {
 
     private onAssetsLoaded(): void {
         this.createRenderer();
-        this.attachPixiConsole();
 
         const stage = this.app!.stage;
+        const aliens: PIXI.BaseTexture = PIXI.Texture.from("rabbit").baseTexture;
+        const swarm: AlienSwarm = new AlienSwarm(stage, aliens);
 
-        const bunny = this.getBunny();
-        bunny.position.set(Main.GAME_WIDTH / 2, Main.GAME_HEIGHT / 2);
-
-        stage.addChild(bunny);
-
-        this.app!.ticker.add(() => {
-            bunny.rotation += 0.05;
+        this.app!.ticker.add((delta: number) => {
+            swarm.update(delta);
         });
     }
 
     private createRenderer(): void {
         this.app = new PIXI.Application({
-            backgroundColor: 0xd3d3d3,
+            backgroundColor: 0x330033,
             width: Main.GAME_WIDTH,
             height: Main.GAME_HEIGHT,
         });
+
+        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
 
         document.body.appendChild(this.app.view);
 
@@ -56,36 +53,36 @@ export class Main {
         window.addEventListener("resize", this.onResize.bind(this));
     }
 
-    private attachPixiConsole() {
-        const consoleConfig = new PixiConsoleConfig();
-        consoleConfig.consoleWidth = this.app!.view.width;
-        consoleConfig.consoleHeight = this.app!.view.height;
-        consoleConfig.backgroundAlpha = 0;
+    // private attachPixiConsole() {
+    //     const consoleConfig = new PixiConsoleConfig();
+    //     consoleConfig.consoleWidth = this.app!.view.width;
+    //     consoleConfig.consoleHeight = this.app!.view.height;
+    //     consoleConfig.backgroundAlpha = 0;
 
-        const pixiConsole = new PixiConsole(consoleConfig);
-        pixiConsole.show();
+    //     const pixiConsole = new PixiConsole(consoleConfig);
+    //     pixiConsole.show();
 
-        this.app!.stage.addChild(pixiConsole);
+    //     this.app!.stage.addChild(pixiConsole);
 
-        console.log("Pixi-console added 🦾");
-        console.warn("Warnings example ✌");
-        setTimeout(() => {
-            throw new Error("Uncaught error example 👮‍♀️");
-        }, 0);
-    }
+    //     console.log("Pixi-console added 🦾");
+    //     console.warn("Warnings example ✌");
+    //     setTimeout(() => {
+    //         throw new Error("Uncaught error example 👮‍♀️");
+    //     }, 0);
+    // }
 
-    private getBunny(): PIXI.Sprite {
-        const bunnyRotationPoint = {
-            x: 0.5,
-            y: 0.5,
-        };
+    // private getBunny(): PIXI.Sprite {
+    //     const bunnyRotationPoint = {
+    //         x: 0.5,
+    //         y: 0.5,
+    //     };
 
-        const bunny = new PIXI.Sprite(PIXI.Texture.from("rabbit"));
-        bunny.anchor.set(bunnyRotationPoint.x, bunnyRotationPoint.y);
-        bunny.scale.set(2, 2);
+    //     const bunny = new PIXI.Sprite(PIXI.Texture.from("rabbit"));
+    //     bunny.anchor.set(bunnyRotationPoint.x, bunnyRotationPoint.y);
+    //     bunny.scale.set(2, 2);
 
-        return bunny;
-    }
+    //     return bunny;
+    // }
 
     private onResize(): void {
         if (!this.app) {
