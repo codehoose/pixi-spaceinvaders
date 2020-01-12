@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "CommonJS" /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */,
+        "strict": true,
+        "baseUrl": "./src",
+        "paths": {
+            "~*": ["./*"]
+        },
+        "types": ["./types/import-files"]
+    },
+    "include": ["./src/index.ts"]
+}
