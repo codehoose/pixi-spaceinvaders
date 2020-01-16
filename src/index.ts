@@ -1,6 +1,10 @@
 import * as PIXI from "pixi.js";
-import { AlienSwarm } from "./AlienSwarm";
-import rabbitImage from "./assets/aliens.png";
+import { AlienSwarm, BulletAlien } from './AlienSwarm';
+import aliensImage from "./assets/aliens.png";
+import tankImage from "./assets/tank.png";
+import shotImage from "./assets/shot.png";
+import explosionImage from "./assets/explosion.png";
+import { Tank } from "~Tank";
 
 export class Main {
     private static readonly GAME_WIDTH = 320;
@@ -16,7 +20,10 @@ export class Main {
 
     private startLoadingAssets(): void {
         const loader = PIXI.Loader.shared;
-        loader.add("rabbit", rabbitImage);
+        loader.add("aliens", aliensImage)
+              .add("tank", tankImage)
+              .add("explosion", explosionImage)
+              .add("shot", shotImage);
         loader.on("complete", () => {
             this.onAssetsLoaded();
         });
@@ -27,17 +34,38 @@ export class Main {
         this.createRenderer();
 
         const stage = this.app!.stage;
-        const aliens: PIXI.BaseTexture = PIXI.Texture.from("rabbit").baseTexture;
-        const swarm: AlienSwarm = new AlienSwarm(stage, aliens);
+        const aliens: PIXI.BaseTexture = PIXI.Texture.from("aliens").baseTexture;
+        const explosion: PIXI.BaseTexture = PIXI.Texture.from("explosion").baseTexture;
+        const swarm: AlienSwarm = new AlienSwarm(stage, aliens, explosion);
+        const tank: Tank = new Tank(stage, PIXI.Texture.from("tank"), PIXI.Texture.from("shot"));
+        stage.addChild(tank.sprite);
+
+        let score: number = 0;
+        const scoreStyle: PIXI.TextStyle = new PIXI.TextStyle()
+        scoreStyle.fill = 0xFFFFFF;
+        scoreStyle.fontFamily = "Arial";
+        scoreStyle.fontSize = 10;
+        const scoreText: PIXI.Text = new PIXI.Text("Score: 0", scoreStyle);
+        stage.addChild(scoreText);
 
         this.app!.ticker.add((delta: number) => {
+            scoreText.text = `Score: ${score}`;
+
+            tank.update(delta);
             swarm.update(delta);
+            const hitResult: BulletAlien = swarm.checkCollisions(tank.bullets);
+            
+            if (hitResult.alien && hitResult.alienRow && hitResult.bullet) {
+                tank.removeBullet(hitResult.bullet);
+                hitResult.alienRow.removeAlien(hitResult.alien); 
+                score = score += hitResult.alien.points;   
+            }
         });
     }
 
     private createRenderer(): void {
         this.app = new PIXI.Application({
-            backgroundColor: 0x330033,
+            backgroundColor: 0x0,
             width: Main.GAME_WIDTH,
             height: Main.GAME_HEIGHT,
         });
@@ -52,37 +80,6 @@ export class Main {
 
         window.addEventListener("resize", this.onResize.bind(this));
     }
-
-    // private attachPixiConsole() {
-    //     const consoleConfig = new PixiConsoleConfig();
-    //     consoleConfig.consoleWidth = this.app!.view.width;
-    //     consoleConfig.consoleHeight = this.app!.view.height;
-    //     consoleConfig.backgroundAlpha = 0;
-
-    //     const pixiConsole = new PixiConsole(consoleConfig);
-    //     pixiConsole.show();
-
-    //     this.app!.stage.addChild(pixiConsole);
-
-    //     console.log("Pixi-console added 🦾");
-    //     console.warn("Warnings example ✌");
-    //     setTimeout(() => {
-    //         throw new Error("Uncaught error example 👮‍♀️");
-    //     }, 0);
-    // }
-
-    // private getBunny(): PIXI.Sprite {
-    //     const bunnyRotationPoint = {
-    //         x: 0.5,
-    //         y: 0.5,
-    //     };
-
-    //     const bunny = new PIXI.Sprite(PIXI.Texture.from("rabbit"));
-    //     bunny.anchor.set(bunnyRotationPoint.x, bunnyRotationPoint.y);
-    //     bunny.scale.set(2, 2);
-
-    //     return bunny;
-    // }
 
     private onResize(): void {
         if (!this.app) {

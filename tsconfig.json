@@ -9,5 +9,5 @@
         },
         "types": ["./types/import-files"]
     },
-    "include": ["./src/index.ts"]
+    "include": ["./src/index.ts", "./src/**/*.ts", "./src/*.ts"]
 }
