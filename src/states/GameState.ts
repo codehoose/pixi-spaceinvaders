@@ -2,12 +2,17 @@ import * as PIXI from "pixi.js";
 import { BaseState } from '../fsm/BaseState';
 import { Tank } from '../Tank';
 import { AlienSwarm, BulletAlien } from '../AlienSwarm';
+import { Keyboard } from '../Keyboard';
+import { Game } from '../Game';
+import { DisplayText } from '../DisplayText';
+
 export class GameState extends BaseState {
 
     private _score: number = 0;
-    private _scoreText: PIXI.Text;
+    private _scoreText: DisplayText;
     private _swarm: AlienSwarm;
     private _tank: Tank;
+    private _quit: Keyboard;
 
     public constructor(app: PIXI.Application, stage: PIXI.Container) {
         super(app, stage);
@@ -25,6 +30,10 @@ export class GameState extends BaseState {
             hitResult.alienRow.removeAlien(hitResult.alien); 
             this._score += hitResult.alien.points;   
         }
+
+        if (this._quit.isDown) {
+            Game.instance.stateManager.changeTo("attract");
+        }
     }
     
     public enter(): void {
@@ -34,17 +43,15 @@ export class GameState extends BaseState {
         this._tank = new Tank("tank", "shot");
 
         this._score = 0;
-        const scoreStyle: PIXI.TextStyle = new PIXI.TextStyle()
-        scoreStyle.fill = 0xFFFFFF;
-        scoreStyle.fontFamily = "Arial";
-        scoreStyle.fontSize = 10;
-        this._scoreText = new PIXI.Text("Score: 0", scoreStyle);
-        this.stage.addChild(this._scoreText);
+        this._scoreText = new DisplayText("Score: 0", 0, 0, "Arial", 10);
+        this._scoreText.color = 0xFFFFFF;
+        this._quit = new Keyboard("Escape");
     }
     
     public exit(): void {
         this._swarm.destroy();
         this._tank.destroy();
         this._scoreText.destroy();
+        this._quit.destroy();
     }
 }

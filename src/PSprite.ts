@@ -2,7 +2,6 @@ import * as PIXI from 'pixi.js';
 import { Game } from './Game';
 
 export class PSprite {
-
     private readonly _sprite: PIXI.Sprite;
 
     public get x(): number {
@@ -43,5 +42,9 @@ export class PSprite {
 
     public set(x: number, y: number): void {
         this._sprite.position.set(x, y);
+    }
+
+    public setTexture(texture: PIXI.Texture): void {
+        this._sprite.texture = texture;
     }
 }

@@ -4,6 +4,7 @@ import shotImage from "./assets/shot.png";
 import explosionImage from "./assets/explosion.png";
 import { GameState } from './states/GameState';
 import { Game } from './Game';
+import { AttractModeState } from './states/AttractModeState';
 
 export class Main {
     private _game: Game;
@@ -24,9 +25,9 @@ export class Main {
     }
 
     private onAssetsLoaded(): void {
-        console.log(`${this._game.app} ${this._game.app.stage.name}`);
         this._game.stateManager.add("game", new GameState(this._game.app, this._game.app.stage));
-        this._game.stateManager.changeTo("game");
+        this._game.stateManager.add("attract", new AttractModeState(this._game.app, this._game.stageManager.stage));
+        this._game.stateManager.changeTo("attract");
         this._game.run();
     }
 }
