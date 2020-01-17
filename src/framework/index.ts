@@ -1,0 +1,1 @@
+export { createSpriteFrom } from './CreateFunctions';

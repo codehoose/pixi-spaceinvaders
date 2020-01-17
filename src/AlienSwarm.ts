@@ -68,6 +68,10 @@ export class AlienSwarm {
         }   
     }
 
+    public destroy(): void {
+        this._rows.forEach((row: AlienRow) => row.destroy());
+    }
+
     public checkCollisions(bullets: Bullet[]): BulletAlien {
         let hit: BulletAlien = { };
         this._rows.forEach((alienRow: AlienRow) => {

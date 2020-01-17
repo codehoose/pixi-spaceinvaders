@@ -17,6 +17,11 @@ export class AlienRow {
         this._container.addChild(alien.sprite);
     }
 
+    public destroy(): void {
+        this._aliens.forEach((a: AnimatedAlien) => a.sprite.destroy());
+        this._aliens = [];
+    }
+
     public removeAlien(alien: AnimatedAlien): void {
         alien.showExplosion();
     }

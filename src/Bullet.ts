@@ -1,27 +1,28 @@
-import * as PIXI from "pixi.js";
+import { PSprite } from './PSprite';
+import { createSpriteFrom } from './framework/CreateFunctions';
 
 export class Bullet {
-
     private readonly _x: number;
-    private readonly _stage: PIXI.Container;
     private _y: number;
 
-    private readonly _sprite: PIXI.Sprite;
-    public get sprite(): PIXI.Sprite {
+    private readonly _sprite: PSprite;
+    public get sprite(): PSprite {
         return this._sprite;
     }
 
-    public constructor(stage: PIXI.Container, texture: PIXI.Texture, x: number, y: number) {
-        this._stage = stage;
+    public constructor(bulletTextureName: string, x: number, y: number) {
         this._x = x;
         this._y = y;
-        this._sprite = new PIXI.Sprite(texture);
-        this._stage.addChild(this._sprite);
-        this._sprite.position.set(this._x, this._y);
+
+        this._sprite = createSpriteFrom(bulletTextureName);
+        this._sprite.set(this._x, this._y);
     }
 
-    public update(): void {
-        this._sprite.position.y -= 50 * (PIXI.Ticker.shared.elapsedMS / 1000.0);
+    public destroy(): void {
+        this._sprite.destroy();
+    }
 
+    public update(deltaTime: number): void {
+        this._sprite.y -= 50 * deltaTime;
     }
 }
