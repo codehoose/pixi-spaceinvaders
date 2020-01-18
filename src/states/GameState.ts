@@ -37,9 +37,7 @@ export class GameState extends BaseState {
     }
     
     public enter(): void {
-        const aliens: PIXI.BaseTexture = PIXI.Texture.from("aliens").baseTexture;
-        const explosion: PIXI.BaseTexture = PIXI.Texture.from("explosion").baseTexture;
-        this._swarm = new AlienSwarm(this.stage, aliens, explosion);
+        this._swarm = new AlienSwarm("aliens", "explosion");
         this._tank = new Tank("tank", "shot");
 
         this._score = 0;

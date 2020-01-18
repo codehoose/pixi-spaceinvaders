@@ -28,8 +28,16 @@ export class PSprite {
         this._sprite.y = y;
     }
 
+    public get tint(): number {
+        return this._sprite.tint;
+    }
+
+    public set tint(tint: number) {
+        this._sprite.tint = tint;
+    }
+
     public constructor(textureName: string, container: PIXI.Container) {
-        const texture: PIXI.Texture = Game.instance.loader.getTexture(textureName);
+        const texture: PIXI.Texture = textureName ? Game.instance.loader.getTexture(textureName) : undefined;
         this._sprite = new PIXI.Sprite(texture);
         if (container) {
             container.addChild(this._sprite);

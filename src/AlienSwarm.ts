@@ -1,7 +1,7 @@
-import * as PIXI from "pixi.js";
 import { AlienRow } from "./AlienRow";
 import { AnimatedAlien } from "./aliens/AnimatedAlien";
 import { Bullet } from './Bullet';
+import { PSprite } from './PSprite';
 
 export type BulletAlien = {
     alien?: AnimatedAlien;
@@ -12,7 +12,7 @@ export type BulletAlien = {
 export class AlienSwarm {
 
     private _count: number = 0;
-    private _moveMs: number = 1000;
+    private _moveSecs: number = 1;
     private _travel: number = 4;
 
     private readonly _squid: AlienRow;
@@ -32,15 +32,15 @@ export class AlienSwarm {
 
     private readonly _rows: AlienRow[];
 
-    public constructor(container: PIXI.Container, alienTexture: PIXI.BaseTexture, explosionTexture: PIXI.BaseTexture) {
-        this._squid = new AlienRow(container, 0x00cc00);
-        this._horns = new AlienRow(container, 0xcccc00);
-        this._octopus = new AlienRow(container, 0xcc00cc);
+    public constructor(alienTexture: string, explosionTexture: string) {
+        this._squid = new AlienRow(0x00cc00);
+        this._horns = new AlienRow(0xcccc00);
+        this._octopus = new AlienRow(0xcc00cc);
 
         this._rows = [this._squid, this._horns, this._octopus];
 
         const sx: number = 72; // Starting X-co-ordinate
-        const sy: number = 16; // Starting Y-co-ordinate
+        const sy: number = 32; // Starting Y-co-ordinate
 
         let x: number = 16; 
         let y: number = sy;
@@ -92,7 +92,7 @@ export class AlienSwarm {
     }
 
     // FROM https://github.com/kittykatattack/learningPixi#the-hittestrectangle-function
-    private hitTestRectangle(r1: PIXI.Sprite, r2: PIXI.Sprite) {
+    private hitTestRectangle(r1: PSprite, r2: PSprite) {
 
         //Define the variables we'll need to calculate
         let hit: boolean = false;
@@ -147,10 +147,11 @@ export class AlienSwarm {
         return hit;
       };
 
-    public update(delta: number): void {        
-        this._count += PIXI.Ticker.shared.elapsedMS;
-        if (this._count >= this._moveMs) {
-            this._count -= this._moveMs;
+    public update(deltaTime: number): void {  
+        console.log(deltaTime);      
+        this._count += deltaTime;
+        if (this._count >= this._moveSecs) {
+            this._count -= this._moveSecs;
 
             let cantMove: boolean = false;
             let descend: boolean = false;
@@ -169,9 +170,9 @@ export class AlienSwarm {
             if (descend) {
                 this._travel *= -1;
                 this._rows.forEach((row: AlienRow) => row.moveDown(16));
-                this._moveMs -= 200;
-                if (this._moveMs <= 200) {
-                    this._moveMs = 200;
+                this._moveSecs -= 0.2;
+                if (this._moveSecs <= 0.2) {
+                    this._moveSecs = 0.2;
                 }
             } else {
                 this._rows.forEach((row: AlienRow) => row.moveAcross(this._travel));

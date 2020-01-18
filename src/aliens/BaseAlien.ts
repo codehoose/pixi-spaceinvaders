@@ -1,46 +1,37 @@
-import * as PIXI from "pixi.js";
+import { PSprite } from '../PSprite';
+import { setSpriteFrame, createSprite } from '../framework/CreateFunctions';
 
 export class BaseAlien {
 
-    private readonly _baseTexture: PIXI.BaseTexture;
+    private readonly _textureName: string;
     private readonly _cellWidth: number;
     private readonly _cellHeight: number;
-    private readonly _columns: number;
-
     private _currentFrame: number = -1;
 
-    protected readonly _frames: PIXI.Texture[] = [];
-    protected get frames(): PIXI.Texture[] {
-        return this._frames;
+    protected readonly _frameIndices: number[] = [];
+    protected get frameIndices(): number[] {
+        return this._frameIndices;
     }
 
-    protected _sprite: PIXI.Sprite = new PIXI.Sprite();
-    public get sprite(): PIXI.Sprite {
+    protected _sprite: PSprite;
+    public get sprite(): PSprite {
         return this._sprite;
     }
 
-    public constructor(baseTexture: PIXI.BaseTexture, cellWidth: number, cellHeight: number) {
+    public constructor(textureName: string, cellWidth: number, cellHeight: number) {
         this._cellWidth = cellWidth;
         this._cellHeight = cellHeight;
-        this._columns = baseTexture.width / cellWidth;
-        this._baseTexture = baseTexture;
+        this._textureName = textureName;
+        this._sprite = createSprite();
     }
 
     public setFrame(frameId: number): void {
         this._currentFrame = frameId;
-        this._currentFrame %= this.frames.length;
-        this.sprite.texture = this.frames[this._currentFrame];
+        this._currentFrame %= this.frameIndices.length;
+        setSpriteFrame(this.sprite, this._textureName, this.frameIndices[this._currentFrame], this._cellWidth, this._cellHeight);
     }
 
     public nextFrame(): void {
         this.setFrame(this._currentFrame + 1);
-    }
-
-    protected createTexture(frameId: number): PIXI.Texture {
-        const x: number = Math.floor(frameId % this._columns) * this._cellWidth;
-        const y: number = Math.floor(frameId / this._columns) * this._cellHeight;
-        const rect: PIXI.Rectangle = new PIXI.Rectangle(x, y, this._cellWidth, this._cellHeight);
-
-        return new PIXI.Texture(this._baseTexture, rect);
     }
 }

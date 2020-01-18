@@ -28,4 +28,12 @@ export class ResourceManager {
 
         return this._cache[name] as PIXI.Texture;
     }
+
+    public hasTexture(name: string): boolean {
+        return this._cache.hasOwnProperty(name);
+    }
+
+    public addTexture(name: string, texture: PIXI.Texture) {
+        this._cache[name] = texture;
+    }
 }

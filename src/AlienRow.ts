@@ -1,8 +1,6 @@
-import * as PIXI from "pixi.js";
 import { AnimatedAlien } from './aliens/AnimatedAlien';
 
 export class AlienRow {
-    private readonly _container: PIXI.Container;
     private readonly _tint: number;
 
     private _aliens: AnimatedAlien[] = [];
@@ -11,10 +9,9 @@ export class AlienRow {
     }
 
     public add(alien: AnimatedAlien, x: number, y: number) {
-        alien.sprite.position.set(x, y);
+        alien.sprite.set(x, y);
         alien.sprite.tint = this._tint;
         this._aliens.push(alien);
-        this._container.addChild(alien.sprite);
     }
 
     public destroy(): void {
@@ -32,24 +29,23 @@ export class AlienRow {
 
     public moveDown(delta: number): void {
         this.removeTheDead();
-        this._aliens.forEach((a: AnimatedAlien) => a.sprite.position.y += delta);
+        this._aliens.forEach((a: AnimatedAlien) => a.sprite.y += delta);
     }
 
     public moveAcross(delta: number): void {
         this.removeTheDead();
-        this._aliens.forEach((a: AnimatedAlien) => a.sprite.position.x += delta);
+        this._aliens.forEach((a: AnimatedAlien) => a.sprite.x += delta);
     }
 
     public atRightMost(x: number): boolean {
-        return this._aliens.filter((a: AnimatedAlien) => a.sprite.position.x >= x).length > 0;
+        return this._aliens.filter((a: AnimatedAlien) => a.sprite.x >= x).length > 0;
     }
 
     public atLeftMost(x: number): boolean {
-        return this._aliens.filter((a: AnimatedAlien) => a.sprite.position.x <= x).length > 0;
+        return this._aliens.filter((a: AnimatedAlien) => a.sprite.x <= x).length > 0;
     }
 
-    public constructor(container: PIXI.Container, tint: number) {
-        this._container = container;
+    public constructor(tint: number) {
         this._tint = tint;
     }
 
