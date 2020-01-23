@@ -1,6 +1,6 @@
 import { Keyboard } from './Keyboard';
 import { Bullet } from "./Bullet";
-import { createSpriteFrom } from './framework/CreateFunctions';
+import { createSpriteFrom } from './framework';
 import { PSprite } from './PSprite';
 
 export class Tank {

@@ -1,14 +1,6 @@
-import aliensImage from "./assets/aliens.png";
-import tankImage from "./assets/tank.png";
-import shotImage from "./assets/shot.png";
-import explosionImage from "./assets/explosion.png";
-import { GameState } from './states/GameState';
-import { Game } from './Game';
-import { AttractModeState } from './states/AttractModeState';
+import { SpaceInvadersGame } from './SpaceInvadersGame';
 
 export class Main {
-    private _game: Game;
-
     constructor() {
         window.onload = (): void => {
             this.startGame();
@@ -16,19 +8,7 @@ export class Main {
     }
 
     private startGame(): void {
-        this._game = new Game(320, 200);
-        this._game.loader.add("aliens", aliensImage)
-            .add("tank", tankImage)
-            .add("explosion", explosionImage)
-            .add("shot", shotImage)
-            .load(() => this.onAssetsLoaded());
-    }
-
-    private onAssetsLoaded(): void {
-        this._game.stateManager.add("game", new GameState(this._game.app, this._game.app.stage));
-        this._game.stateManager.add("attract", new AttractModeState(this._game.app, this._game.stageManager.stage));
-        this._game.stateManager.changeTo("attract");
-        this._game.run();
+        new SpaceInvadersGame(320, 200);
     }
 }
 

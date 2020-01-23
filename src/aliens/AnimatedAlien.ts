@@ -1,5 +1,5 @@
 import { BaseAlien } from "./BaseAlien";
-import { setSpriteTexture } from '../framework/CreateFunctions';
+import { setSpriteTexture } from '../framework';
 
 export class AnimatedAlien extends BaseAlien {
     private readonly _explosion: string;

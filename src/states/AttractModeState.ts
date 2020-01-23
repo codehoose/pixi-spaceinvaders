@@ -1,8 +1,7 @@
-import * as PIXI from "pixi.js";
 import { BaseState } from '../fsm/BaseState';
 import { Keyboard } from '../Keyboard';
-import { Game } from '../Game';
 import { DisplayText } from '../DisplayText';
+import { changeToState } from '../framework';
 
 export class AttractModeState extends BaseState {
 
@@ -21,13 +20,9 @@ export class AttractModeState extends BaseState {
         0xFFFF00
     ]
 
-    public constructor(app: PIXI.Application, stage: PIXI.Container) {
-        super(app, stage);
-    }
-
     public update(deltaTime: number): void {
         if (this._p.isDown) {
-            Game.instance.stateManager.changeTo("game");
+            changeToState("game");
         }
 
         if (this._count > 0) {

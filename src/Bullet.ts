@@ -1,5 +1,5 @@
 import { PSprite } from './PSprite';
-import { createSpriteFrom } from './framework/CreateFunctions';
+import { createSpriteFrom } from './framework';
 
 export class Bullet {
     private readonly _x: number;

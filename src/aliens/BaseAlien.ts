@@ -1,5 +1,5 @@
 import { PSprite } from '../PSprite';
-import { setSpriteFrame, createSprite } from '../framework/CreateFunctions';
+import { setSpriteFrame, createSprite } from '../framework';
 
 export class BaseAlien {
 

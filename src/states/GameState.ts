@@ -1,10 +1,9 @@
-import * as PIXI from "pixi.js";
 import { BaseState } from '../fsm/BaseState';
 import { Tank } from '../Tank';
 import { AlienSwarm, BulletAlien } from '../AlienSwarm';
 import { Keyboard } from '../Keyboard';
-import { Game } from '../Game';
 import { DisplayText } from '../DisplayText';
+import { changeToState } from '../framework';
 
 export class GameState extends BaseState {
 
@@ -13,10 +12,6 @@ export class GameState extends BaseState {
     private _swarm: AlienSwarm;
     private _tank: Tank;
     private _quit: Keyboard;
-
-    public constructor(app: PIXI.Application, stage: PIXI.Container) {
-        super(app, stage);
-    }
 
     public update(deltaTime: number): void {
         this._scoreText.text = `Score: ${this._score}`;
@@ -32,7 +27,7 @@ export class GameState extends BaseState {
         }
 
         if (this._quit.isDown) {
-            Game.instance.stateManager.changeTo("attract");
+            changeToState("attract");
         }
     }
     
