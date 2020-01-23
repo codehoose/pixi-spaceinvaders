@@ -19,8 +19,8 @@ export class SpaceInvadersGame extends Game {
     }
 
     private onAssetsLoaded(): void {
-        this.stateManager.add("game", new GameState(this, this.app.stage));
-        this.stateManager.add("attract", new AttractModeState(this, this.stageManager.stage));
+        this.stateManager.add("game", new GameState());
+        this.stateManager.add("attract", new AttractModeState());
         this.stateManager.changeTo("attract");
         this.run();
     }    

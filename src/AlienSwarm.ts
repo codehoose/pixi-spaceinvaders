@@ -148,7 +148,6 @@ export class AlienSwarm {
       };
 
     public update(deltaTime: number): void {  
-        console.log(deltaTime);      
         this._count += deltaTime;
         if (this._count >= this._moveSecs) {
             this._count -= this._moveSecs;
