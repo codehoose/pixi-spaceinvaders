@@ -2,6 +2,8 @@ import { AlienRow } from "./AlienRow";
 import { AnimatedAlien } from "./aliens/AnimatedAlien";
 import { Bullet } from './Bullet';
 import { PSprite } from './PSprite';
+import { randomRange } from './framework/RandomFunctions';
+import { Game } from './Game';
 
 export type BulletAlien = {
     alien?: AnimatedAlien;
@@ -10,10 +12,11 @@ export type BulletAlien = {
 }
 
 export class AlienSwarm {
-
     private _count: number = 0;
     private _moveSecs: number = 1;
     private _travel: number = 4;
+    private _bulletCooldown: number = 0;
+    private _bullets: Bullet[] = [];
 
     private readonly _squid: AlienRow;
     public get squid(): AlienRow {
@@ -70,6 +73,7 @@ export class AlienSwarm {
 
     public destroy(): void {
         this._rows.forEach((row: AlienRow) => row.destroy());
+        this._bullets.forEach((b: Bullet) => b.destroy());
     }
 
     public checkCollisions(bullets: Bullet[]): BulletAlien {
@@ -178,6 +182,32 @@ export class AlienSwarm {
             }
 
             this._rows.forEach((row: AlienRow) => row.nextFrame());
+        }
+
+        this.shootBullet(deltaTime);
+        this._bullets.forEach((b: Bullet) => b.update(deltaTime));
+    }
+
+    private shootBullet(deltaTime: number): void {
+        if (this._bulletCooldown >= 0) {
+            this._bulletCooldown -= deltaTime;
+            return;
+        }
+
+        const rowIndex: number = randomRange(this._rows.length);
+        const alienIndex: number = randomRange(this._rows[rowIndex].aliens.length);
+        const alien: AnimatedAlien = this._rows[rowIndex].aliens[alienIndex];
+
+        if (alien) {
+            const bullet: Bullet = new Bullet("alienshot", alien.x, alien.y, 4, 1);
+            bullet.tint = this._rows[rowIndex].tint;
+            this._bullets.push(bullet);
+            this._bulletCooldown = 2;
+        }
+
+        if (this._bullets.length > 5) {
+            const b: Bullet = this._bullets.shift();
+            b.destroy();
         }
     }
 }

@@ -18,6 +18,22 @@ export class BaseAlien {
         return this._sprite;
     }
 
+    public get x(): number {
+        return this._sprite.x;
+    }
+
+    public set x(x: number) {
+        this._sprite.x = x;
+    }
+
+    public get y(): number {
+        return this._sprite.y;
+    }
+
+    public set y(y: number) {
+        this._sprite.y = y;
+    }
+
     public constructor(textureName: string, cellWidth: number, cellHeight: number) {
         this._cellWidth = cellWidth;
         this._cellHeight = cellHeight;

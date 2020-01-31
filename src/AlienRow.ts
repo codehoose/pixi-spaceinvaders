@@ -8,6 +8,10 @@ export class AlienRow {
         return this._aliens;
     }
 
+    public get tint(): number { 
+        return this._tint;
+    }
+
     public add(alien: AnimatedAlien, x: number, y: number) {
         alien.sprite.set(x, y);
         alien.sprite.tint = this._tint;

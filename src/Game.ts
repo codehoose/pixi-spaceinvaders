@@ -34,6 +34,14 @@ export class Game {
         return this._stageManager;
     }
 
+    public get height(): number {
+        return this._height;
+    }
+
+    public get width(): number {
+        return this._width;
+    }
+
     public constructor(width: number, height: number, backgroundColor: number = 0x0) {
         this._app = new PIXI.Application({
             backgroundColor,
