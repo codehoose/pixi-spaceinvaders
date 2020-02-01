@@ -31,6 +31,15 @@ export class Tank {
         return this._bullets;
     }
 
+    private _afterExplosionCallback: () => void;
+    public get afterExplosion(): () => void {
+        return this._afterExplosionCallback;
+    }
+
+    public set afterExplosion(afterExplosion: () => void) {
+        this._afterExplosionCallback = afterExplosion;
+    }
+
     public constructor(tankTexture: string, bulletTexture: string, explosionTexture: string) {
         this._sprite = createSpriteFrom(tankTexture);
         this._tankTexture = tankTexture;
@@ -109,8 +118,10 @@ export class Tank {
                 setSpriteFrame(this._sprite, this._explosionTexture, this._deathCycle % 2, 16, 8);
                 this._deathCounter += 0.25;
                 this._deathCycle--;
+                if (this._deathCycle === 0 && this._afterExplosionCallback) {
+                    this._afterExplosionCallback();
+                }
             }
-
             return;
         }
 

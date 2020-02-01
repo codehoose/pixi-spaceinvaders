@@ -4,6 +4,9 @@ import { DisplayText } from '../DisplayText';
 import { changeToState } from '../framework';
 
 export class AttractModeState extends BaseState {
+    private readonly _message: string;
+    private readonly _key: string;
+    private readonly _nextState: string;
 
     private _text: DisplayText;
     private _p: Keyboard;
@@ -20,9 +23,17 @@ export class AttractModeState extends BaseState {
         0xFFFF00
     ]
 
+    public constructor(message: string, key: string, nextState: string) {
+        super();
+
+        this._message = message;
+        this._key = key;
+        this._nextState = nextState;
+    }
+
     public update(deltaTime: number): void {
         if (this._p.isDown) {
-            changeToState("game");
+            changeToState(this._nextState);
         }
 
         if (this._count > 0) {
@@ -36,9 +47,9 @@ export class AttractModeState extends BaseState {
     }
     
     public enter(): void {
-        this._text = new DisplayText("SPACE INVADERS\nPress 'P' to Play", 110, 90, "Arial", 12, "center");
+        this._text = new DisplayText(this._message, 110, 90, "Arial", 12, "center");
         this._text.color = 0xFFFFFF;
-        this._p = new Keyboard("p");
+        this._p = new Keyboard(this._key);
     }
 
     public exit(): void {
