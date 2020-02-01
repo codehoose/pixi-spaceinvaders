@@ -4,6 +4,7 @@ import { Bullet } from './Bullet';
 import { PSprite } from './PSprite';
 import { randomRange } from './framework/RandomFunctions';
 import { Game } from './Game';
+import { Tank } from './Tank';
 
 export type BulletAlien = {
     alien?: AnimatedAlien;
@@ -74,6 +75,18 @@ export class AlienSwarm {
     public destroy(): void {
         this._rows.forEach((row: AlienRow) => row.destroy());
         this._bullets.forEach((b: Bullet) => b.destroy());
+    }
+
+    public checkTankCollision(tank: Tank): boolean {
+        let result: boolean = false;
+        this._bullets.forEach((b: Bullet) => {
+            if (this.hitTestRectangle(tank.sprite, b.sprite)) {
+                b.sprite.destroy();
+                this._bullets = this._bullets.filter((b2: Bullet) => b2 !== b);
+                result = true;
+            }
+        });
+        return result;
     }
 
     public checkCollisions(bullets: Bullet[]): BulletAlien {

@@ -26,6 +26,10 @@ export class GameState extends BaseState {
             this._score += hitResult.alien.points;   
         }
 
+        if (this._swarm.checkTankCollision(this._tank)) {
+            this._tank.explode();
+        }
+
         if (this._quit.isDown) {
             changeToState("attract");
         }
@@ -33,7 +37,7 @@ export class GameState extends BaseState {
     
     public enter(): void {
         this._swarm = new AlienSwarm("aliens", "explosion");
-        this._tank = new Tank("tank", "shot");
+        this._tank = new Tank("tank", "shot", "tankexplosion");
 
         this._score = 0;
         this._scoreText = new DisplayText("Score: 0", 0, 0, "Arial", 10);

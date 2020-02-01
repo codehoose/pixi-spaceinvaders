@@ -7,6 +7,7 @@ import tankImage from "./assets/tank.png";
 import shotImage from "./assets/shot.png";
 import explosionImage from "./assets/explosion.png";
 import alienShotImage from "./assets/alienshot.png";
+import tankExplosion from "./assets/tank-explosion.png";
 
 export class SpaceInvadersGame extends Game {
     public constructor(width: number, height: number, backgroundColor?: number) {
@@ -17,6 +18,7 @@ export class SpaceInvadersGame extends Game {
             .add("explosion", explosionImage)
             .add("shot", shotImage)
             .add("alienshot", alienShotImage)
+            .add("tankexplosion", tankExplosion)
             .load(() => this.onAssetsLoaded());
     }
 

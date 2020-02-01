@@ -1,7 +1,8 @@
 import { Keyboard } from './Keyboard';
 import { Bullet } from "./Bullet";
-import { createSpriteFrom } from './framework';
+import { createSpriteFrom, setSpriteFrame } from './framework';
 import { PSprite } from './PSprite';
+import { getTexture } from './framework/CacheFunctions';
 
 export class Tank {
     private static HORIZONTAL_SPEED: number = 100;
@@ -10,10 +11,15 @@ export class Tank {
     private readonly _right: Keyboard;
     private readonly _shoot: Keyboard;
 
+    private _deathCycle: number = 0;
+    private _deathCounter: number = 0;
+
     private _fireCooldown: number = 0;
     private _x: number;
 
+    private readonly _tankTexture: string;
     private readonly _bulletTexture: string;
+    private readonly _explosionTexture: string;
 
     private readonly _sprite: PSprite;
     public get sprite(): PSprite {
@@ -25,9 +31,11 @@ export class Tank {
         return this._bullets;
     }
 
-    public constructor(tankTexture: string, bulletTexture: string) {
+    public constructor(tankTexture: string, bulletTexture: string, explosionTexture: string) {
         this._sprite = createSpriteFrom(tankTexture);
+        this._tankTexture = tankTexture;
         this._bulletTexture = bulletTexture;
+        this._explosionTexture = explosionTexture;
         this._sprite.x = 144;
         this._x = 144;
         this._sprite.y = 184;
@@ -43,6 +51,12 @@ export class Tank {
         this._shoot.destroy();
         this._bullets.forEach((b: Bullet) => b.destroy());
         this._bullets = [];
+    }
+
+    public explode(): void {
+        this._deathCycle = 6;
+        this._deathCounter = 0;
+        setSpriteFrame(this.sprite, this._explosionTexture, 0, 16, 8);
     }
 
     public removeBullet(bullet: Bullet): void {
@@ -85,6 +99,25 @@ export class Tank {
             }
         }
 
+        this._bullets.forEach((b: Bullet) => {
+            b.update(deltaTime);
+        });
+
+        if (this._deathCycle > 0) {
+            this._deathCounter -= deltaTime;
+            if (this._deathCounter <= 0) {
+                setSpriteFrame(this._sprite, this._explosionTexture, this._deathCycle % 2, 16, 8);
+                this._deathCounter += 0.25;
+                this._deathCycle--;
+            }
+
+            return;
+        }
+
+        this._deathCounter = 0;
+        this._deathCycle = 0;
+        this._sprite.setTexture(getTexture(this._tankTexture));
+
         if (this._shoot.isDown) {
             this.fire();
         }
@@ -94,9 +127,5 @@ export class Tank {
         } else if (this._left.isDown) {
             this.moveLeft(deltaTime);
         }
-
-        this._bullets.forEach((b: Bullet) => {
-            b.update(deltaTime);
-        });
     }
 }
