@@ -1,6 +1,10 @@
+# Space Invaders in PIXI
+
+Uses the pixi typescript boilerplate (see below).
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/14e7ef42-5c90-44c8-a7ec-0b6e20c59735/deploy-status)](https://pixi-typescript-boilerplate.netlify.com)
 
-# pixi-typescript-boilerplate
+## pixi-typescript-boilerplate
 
 Beginner friendly template for pixi.js with [Parcel](https://parceljs.org/)
 
