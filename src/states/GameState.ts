@@ -4,6 +4,7 @@ import { AlienSwarm, BulletAlien } from '../AlienSwarm';
 import { Keyboard } from '../Keyboard';
 import { DisplayText } from '../DisplayText';
 import { changeToState } from '../framework';
+import { GameObject } from '~engine/GameObject';
 
 export class GameState extends BaseState {
     private static MAX_LIVES: number = 3;
@@ -12,7 +13,8 @@ export class GameState extends BaseState {
     private _lives: number = GameState.MAX_LIVES;
     private _scoreText: DisplayText;
     private _swarm: AlienSwarm;
-    private _tank: Tank;
+    private _tank: GameObject;
+    private _tankComponent: Tank;
     private _quit: Keyboard;
     private _gameOver: boolean = false;
 
@@ -22,16 +24,16 @@ export class GameState extends BaseState {
 
         this._tank.update(deltaTime);
         this._swarm.update(deltaTime);
-        const hitResult: BulletAlien = this._swarm.checkCollisions(this._tank.bullets);
+        const hitResult: BulletAlien = this._swarm.checkCollisions(this._tankComponent.bullets);
         
         if (hitResult.alien && hitResult.alienRow && hitResult.bullet) {
-            this._tank.removeBullet(hitResult.bullet);
+            this._tankComponent.removeBullet(hitResult.bullet);
             hitResult.alienRow.removeAlien(hitResult.alien); 
             this._score += hitResult.alien.points;   
         }
 
-        if (this._swarm.checkTankCollision(this._tank)) {
-            this._tank.explode();
+        if (this._swarm.checkTankCollision(this._tankComponent)) {
+            this._tankComponent.explode();
             this._lives--;
         }
 
@@ -46,8 +48,13 @@ export class GameState extends BaseState {
     
     public enter(): void {
         this._swarm = new AlienSwarm("aliens", "explosion");
-        this._tank = new Tank("tank", "shot", "tankexplosion");
-        this._tank.afterExplosion = () => {
+
+        this._tank = new GameObject();
+        this._tankComponent = new Tank("tank", "shot", "tankexplosion");
+        this._tank.addComponent(this._tankComponent)
+
+        // this._tank = new Tank("tank", "shot", "tankexplosion");
+        this._tankComponent.afterExplosion = () => {
             if (this._lives === 0) {
                 this._gameOver = true;
             }

@@ -3,8 +3,9 @@ import { Bullet } from "./Bullet";
 import { createSpriteFrom, setSpriteFrame } from './framework';
 import { PSprite } from './PSprite';
 import { getTexture } from './framework/CacheFunctions';
+import { IComponent } from '~engine/IComponent';
 
-export class Tank {
+export class Tank implements IComponent {
     private static HORIZONTAL_SPEED: number = 100;
 
     private readonly _left: Keyboard;
